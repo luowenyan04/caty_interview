@@ -1,8 +1,11 @@
 package com.example.caty_interview.Controller;
 
+import com.example.caty_interview.Entity.Bpi;
+import com.example.caty_interview.Entity.Code;
 import com.example.caty_interview.Entity.CoinDesk;
 import com.example.caty_interview.Entity.CurrencyEntity;
 import com.example.caty_interview.Service.CurrencyService;
+import com.example.caty_interview.Tool.CurrencyScan;
 import com.example.caty_interview.Tool.JavaScriptMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +21,9 @@ public class CurrencyController {
 
     @Autowired
     private CurrencyService currencyService;
+
+    @Autowired
+    private CurrencyScan currencyScan;
 
     @GetMapping("/{name}")
     public CurrencyEntity getCurrency(@PathVariable String name) {
@@ -47,29 +53,26 @@ public class CurrencyController {
 
     @GetMapping("/updateCoinDesk")
     public List<CurrencyEntity> updateCoinDesk() {
-        CoinDesk coinDesk = callCoinDesk();
-
         List<CurrencyEntity> currencyEntityList = new ArrayList<>();
 
-        CurrencyEntity currencyUSD = new CurrencyEntity();
-        if (currencyUSD != null) {
-            currencyUSD.setName(coinDesk.getBpi().getUSD().getCode());
-            currencyUSD.setRate(coinDesk.getBpi().getUSD().getRate());
-            currencyEntityList.add(currencyService.updateCurrency(currencyUSD.getName(), currencyUSD));
-        }
-        CurrencyEntity currencyGBP = new CurrencyEntity();
-        if (currencyGBP != null) {
-            currencyGBP.setName(coinDesk.getBpi().getGBP().getCode());
-            currencyGBP.setRate(coinDesk.getBpi().getGBP().getRate());
-            currencyEntityList.add(currencyService.updateCurrency(currencyGBP.getName(), currencyGBP));
+        CoinDesk coinDesk = callCoinDesk();
+
+        Bpi bpi = coinDesk.getBpi();
+        if (bpi.getUSD() != null) {
+            Code code = bpi.getUSD();
+            currencyEntityList.add(updateCurrency(code));
         }
 
-        CurrencyEntity currencyEUR = new CurrencyEntity();
-        if (currencyEUR != null) {
-            currencyEUR.setName(coinDesk.getBpi().getEUR().getCode());
-            currencyEUR.setRate(coinDesk.getBpi().getEUR().getRate());
-            currencyEntityList.add(currencyService.updateCurrency(currencyEUR.getName(), currencyEUR));
+        if (bpi.getGBP() != null) {
+            Code code = bpi.getGBP();
+            currencyEntityList.add(updateCurrency(code));
         }
+
+        if (bpi.getEUR() != null) {
+            Code code = bpi.getEUR();
+            currencyEntityList.add(updateCurrency(code));
+        }
+
         return currencyEntityList;
     }
 
@@ -82,5 +85,15 @@ public class CurrencyController {
                 CoinDesk.class);
 
         return coinDesk;
+    }
+
+    public CurrencyEntity updateCurrency(Code code) {
+        CurrencyEntity currencyEntity = new CurrencyEntity();
+        String s = code.getCode();
+        CurrencyEntity oldCurrencyEntity = currencyScan.getCurrencyEntity(s);
+        currencyEntity.setName(s);
+        currencyEntity.setNameZh(oldCurrencyEntity.getNameZh());
+        currencyEntity.setRate(code.getRate());
+        return currencyService.updateCurrency(s, currencyEntity);
     }
 }

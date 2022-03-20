@@ -13,4 +13,5 @@ public class Bpi {
 
     @JsonProperty("EUR")
     Code EUR;
+
 }
