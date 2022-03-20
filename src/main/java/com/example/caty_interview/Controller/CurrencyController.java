@@ -33,7 +33,7 @@ public class CurrencyController {
     }
 
     @PostMapping
-    public CurrencyEntity createCurrency(@RequestBody CurrencyEntity request) {
+    public CurrencyEntity createCurrency(@RequestBody CurrencyDTO request) {
         return currencyService.createCurrency(request);
     }
 

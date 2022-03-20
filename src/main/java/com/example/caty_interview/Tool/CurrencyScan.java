@@ -26,7 +26,7 @@ public class CurrencyScan {
         }
     }
 
-    public CurrencyEntity getCurrencyEntity(String name) throws Exception {
+    public CurrencyEntity getCurrencyEntity(String name) {
         initCurrencyMap();
         final CurrencyEntity currencyEntity = currencyEntityMap.get(name);
         if (currencyEntity == null) {

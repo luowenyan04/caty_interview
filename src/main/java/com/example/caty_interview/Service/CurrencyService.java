@@ -19,9 +19,12 @@ public class CurrencyService {
         return currencyRepository.findById(name);
     }
 
-    public CurrencyEntity createCurrency(CurrencyEntity request) {
-        currencyRepository.save(request);
-        return request;
+    public CurrencyEntity createCurrency(CurrencyDTO request) {
+        CurrencyEntity currencyEntity = new CurrencyEntity();
+        currencyEntity.setName(request.getName());
+        currencyEntity.setNameZh(request.getNameZh());
+        currencyEntity.setRate(request.getRate());
+        return currencyRepository.save(currencyEntity);
     }
 
     public CurrencyEntity updateCurrency(String name, CurrencyDTO request) throws Exception {
