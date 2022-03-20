@@ -25,7 +25,7 @@ public class CurrencyControllerTest {
     @Test
     void getCurrency() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/{name}", "USD");
+                .get("/caty/{name}", "USD");
 
         MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200))
@@ -38,7 +38,7 @@ public class CurrencyControllerTest {
     @Test
     void createCurrency() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/")
+                .post("/caty")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "\"name\": \"TWD\",\n" +
@@ -55,7 +55,7 @@ public class CurrencyControllerTest {
     @Test
     void updateCurrency() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/{name}", "USD")
+                .put("/caty/{name}", "USD")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "\"nameZh\": \"美金\",\n" +
@@ -73,7 +73,7 @@ public class CurrencyControllerTest {
     @Test
     void deleteCurrency() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/{name}", "GBP");
+                .delete("/caty/{name}", "GBP");
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())
@@ -83,7 +83,7 @@ public class CurrencyControllerTest {
     @Test
     void callCoinDesk() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/getCoinDesk");
+                .get("/caty/getCoinDesk");
 
         MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200))
@@ -96,7 +96,7 @@ public class CurrencyControllerTest {
     @Test
     void updateCoinDesk() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/updateCoinDesk");
+                .get("/caty/updateCoinDesk");
 
         MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200))

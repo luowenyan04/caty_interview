@@ -26,11 +26,11 @@ public class CurrencyScan {
         }
     }
 
-    public CurrencyEntity getCurrencyEntity(String name) {
+    public CurrencyEntity getCurrencyEntity(String name) throws Exception {
         initCurrencyMap();
         final CurrencyEntity currencyEntity = currencyEntityMap.get(name);
         if (currencyEntity == null) {
-            throw new RuntimeException("查無資料");
+            throw new RuntimeException("查無任何資料");
         }
         return currencyEntity;
     }

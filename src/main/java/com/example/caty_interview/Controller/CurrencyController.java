@@ -1,5 +1,6 @@
 package com.example.caty_interview.Controller;
 
+import com.example.caty_interview.DTO.CurrencyDTO;
 import com.example.caty_interview.Entity.Bpi;
 import com.example.caty_interview.Entity.Code;
 import com.example.caty_interview.Entity.CoinDesk;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/caty", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CurrencyController {
 
     @Autowired
@@ -27,17 +29,17 @@ public class CurrencyController {
 
     @GetMapping("/{name}")
     public CurrencyEntity getCurrency(@PathVariable String name) {
-        return currencyService.getCurrency(name);
+        return currencyService.getCurrency(name).get();
     }
 
-    @PostMapping()
+    @PostMapping
     public CurrencyEntity createCurrency(@RequestBody CurrencyEntity request) {
         return currencyService.createCurrency(request);
     }
 
     @PutMapping("/{name}")
     public CurrencyEntity updateCurrency(@PathVariable String name,
-                                         @RequestBody CurrencyEntity request) {
+                                         @RequestBody CurrencyDTO request) throws Exception {
         return currencyService.updateCurrency(name, request);
     }
 
@@ -52,7 +54,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/updateCoinDesk")
-    public List<CurrencyEntity> updateCoinDesk() {
+    public List<CurrencyEntity> updateCoinDesk() throws Exception {
         List<CurrencyEntity> currencyEntityList = new ArrayList<>();
 
         CoinDesk coinDesk = callCoinDesk();
@@ -87,13 +89,13 @@ public class CurrencyController {
         return coinDesk;
     }
 
-    public CurrencyEntity updateCurrency(Code code) {
-        CurrencyEntity currencyEntity = new CurrencyEntity();
+    public CurrencyEntity updateCurrency(Code code) throws Exception {
+        CurrencyDTO currencyDTO = new CurrencyDTO();
         String s = code.getCode();
         CurrencyEntity oldCurrencyEntity = currencyScan.getCurrencyEntity(s);
-        currencyEntity.setName(s);
-        currencyEntity.setNameZh(oldCurrencyEntity.getNameZh());
-        currencyEntity.setRate(code.getRate());
-        return currencyService.updateCurrency(s, currencyEntity);
+        currencyDTO.setName(s);
+        currencyDTO.setNameZh(oldCurrencyEntity.getNameZh());
+        currencyDTO.setRate(code.getRate());
+        return currencyService.updateCurrency(s, currencyDTO);
     }
 }
